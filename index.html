@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Meo Store | متجر العائلة الخاص</title>
+  <title>Meo Store | متجر الأعمال اليدوية الخاص</title>
 
   <!-- خط تجوال الأنيق للغة العربية -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -46,141 +46,66 @@
   <script type="text/babel">
     const { useState, useEffect, useMemo } = React;
 
-    // ==========================================
-    // 1. البيانات الافتراضية للمتجر العائلي
-    // ==========================================
     const OWNER_EMAIL = 'maithas3dns@gmail.com';
 
+    // التصنيفات المحدثة حسب قائمة أسعارك
     const STORE_CATEGORIES = [
       { id: 'all', nameAr: 'جميع المنتجات', nameEn: 'All Products', icon: '✨' },
-      { id: 'clothes', nameAr: 'ملابس ومواليد', nameEn: 'Baby & Kids Wear', icon: '👶' },
-      { id: 'toys', nameAr: 'ألعاب تعليمية', nameEn: 'Montessori Toys', icon: '🧩' },
-      { id: 'care', nameAr: 'عناية بالأم والطفل', nameEn: 'Mom & Baby Care', icon: '🌸' },
-      { id: 'accessories', nameAr: 'حقائب وإكسسوارات', nameEn: 'Bags & Keepsakes', icon: '🎒' },
-      { id: 'home', nameAr: 'مستلزمات البيت', nameEn: 'Family Home', icon: '🏡' },
+      { id: 'beads', nameAr: 'الخرز', nameEn: 'Beads', icon: '💎' },
+      { id: 'clay', nameAr: 'صلصال فوم', nameEn: 'Foam Clay', icon: '🎨' },
+      { id: 'pottery', nameAr: 'الفخارات', nameEn: 'Pottery', icon: '🏺' },
+      { id: 'stationery', nameAr: 'أدوات مكتبة', nameEn: 'Stationery', icon: '📚' },
     ];
 
+    // المنتجات الحقيقية تماماً مع أسعارها الدقيقة من قائمتك
     const INITIAL_PRODUCTS = [
-      {
-        id: 'prod-1',
-        titleAr: 'أفرول قطني مضلع للمواليد مع جوارب صوفية ناعمة',
-        titleEn: 'Organic Ribbed Cotton Baby Romper & Knit Booties',
-        category: 'clothes',
-        price: 89,
-        originalPrice: 120,
-        image: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=600&q=80',
-        rating: 5.0,
-        stockQuantity: 12,
-        inStock: true,
-        isNew: true,
-        isBestSeller: true,
-        descriptionAr: 'مصنوع بنسبة 100% من القطن العضوي المعتمد لحماية بشرة المواليد الحساسة مع أزرار خشبية أنيقة وسحاب مريح.',
-        descriptionEn: '100% certified organic cotton baby romper with gentle wooden buttons and ultra-soft knit booties.',
-        sizes: ['0-3 شهور', '3-6 شهور', '6-12 شهر'],
-        colors: ['وردي ناعم', 'بيج رملي', 'رمادي دافئ']
-      },
-      {
-        id: 'prod-2',
-        titleAr: 'مجموعة المكعبات الخشبية وقوس قزح التعليمي مونتيسوري',
-        titleEn: 'Handcrafted Montessori Wooden Stacking Rainbow',
-        category: 'toys',
-        price: 115,
-        originalPrice: 145,
-        image: 'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=600&q=80',
-        rating: 4.9,
-        stockQuantity: 8,
-        inStock: true,
-        isNew: false,
-        isBestSeller: true,
-        descriptionAr: 'لعبة تعليمية من خشب الزان الطبيعي ومطلية بألوان مائية آمنة وغير سامة لتطوير المهارات الحركية والتوازن.',
-        descriptionEn: 'Handmade beechwood stacking toy with non-toxic waterborne finishes to promote cognitive development.',
-        sizes: ['طقم متكامل (18 قطعة)'],
-        colors: ['ألوان باستيل', 'خشب طبيعي']
-      },
-      {
-        id: 'prod-3',
-        titleAr: 'مجموعة العناية الفاخرة بالأم والطفل بزيت الورد والشاش',
-        titleEn: 'Botanical Maternity & Newborn Care Ritual Set',
-        category: 'care',
-        price: 149,
-        originalPrice: 185,
-        image: 'https://images.unsplash.com/photo-1608248597359-57353f46f8aa?auto=format&fit=crop&w=600&q=80',
-        rating: 5.0,
-        stockQuantity: 15,
-        inStock: true,
-        isNew: true,
-        isBestSeller: false,
-        descriptionAr: 'بكج العناية الكامل للأم والطفل بزيت الورد النقي المغذي للبشرة مع لفات قماط من شاش الخيزران فائق النعومة.',
-        descriptionEn: 'Curated postpartum maternity set with pure rosehip elixir and breathable bamboo muslin cloths.',
-        sizes: ['طقم العناية الشامل'],
-        colors: ['باستيل طبيعي']
-      },
-      {
-        id: 'prod-4',
-        titleAr: 'حقيبة الظهر المضلعة للأطفال بأذني الدب اللطيفة',
-        titleEn: 'Little Bear Corduroy Pastel Toddler Backpack',
-        category: 'accessories',
-        price: 79,
-        originalPrice: 99,
-        image: 'https://images.unsplash.com/photo-1546938576-6e6a64f317cc?auto=format&fit=crop&w=600&q=80',
-        rating: 4.8,
-        stockQuantity: 10,
-        inStock: true,
-        isNew: false,
-        isBestSeller: true,
-        descriptionAr: 'حقيبة أطفال من قماش الكوردروي المضلع الناعم خفيفة الوزن مع أحزمة مريحة وتصميم أذني الدب الجذاب.',
-        descriptionEn: 'Charming ergonomic ribbed corduroy backpack tailored for nursery visits and weekend outings.',
-        sizes: ['مقاس موحد للأطفال'],
-        colors: ['وردي وبيج', 'بني دافئ', 'ميرمية']
-      }
+      // الخرز
+      { id: 'b-1', titleAr: 'أقراط أذن', titleEn: 'Earrings', category: 'beads', price: 5, image: 'https://images.unsplash.com/photo-1635767798638-3e25273a8236?auto=format&fit=crop&w=600&q=80', stockQuantity: 20 },
+      { id: 'b-2', titleAr: 'خاتم', titleEn: 'Ring', category: 'beads', price: 5, image: 'https://images.unsplash.com/photo-1603561591411-07134e71a2a9?auto=format&fit=crop&w=600&q=80', stockQuantity: 20 },
+      { id: 'b-3', titleAr: 'أساور يد', titleEn: 'Bracelet', category: 'beads', price: 5, image: 'https://images.unsplash.com/photo-1611591475253-5d57ad75e5b3?auto=format&fit=crop&w=600&q=80', stockQuantity: 20 },
+      { id: 'b-4', titleAr: 'أساور يد المتصلة بالاصبع', titleEn: 'Finger Connected Bracelet', category: 'beads', price: 6, image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=600&q=80', stockQuantity: 15 },
+      { id: 'b-5', titleAr: 'سلسلة', titleEn: 'Necklace', category: 'beads', price: 10, image: 'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?auto=format&fit=crop&w=600&q=80', stockQuantity: 10 },
+      { id: 'b-6', titleAr: 'أطقم', titleEn: 'Sets', category: 'beads', price: 15, image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=600&q=80', stockQuantity: 10 },
+      { id: 'b-7', titleAr: 'أساور للأجهزة', titleEn: 'Device Straps', category: 'beads', price: 5, image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=600&q=80', stockQuantity: 20 },
+      
+      // صلصال فوم
+      { id: 'c-1', titleAr: 'صلصال الفوم (على حسب الكمية)', titleEn: 'Foam Clay', category: 'clay', price: 5, image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=600&q=80', stockQuantity: 30 },
+
+      // الفخارات
+      { id: 'p-1', titleAr: 'الفخار بالحجم الصغير', titleEn: 'Small Pottery', category: 'pottery', price: 5, image: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&w=600&q=80', stockQuantity: 10 },
+      { id: 'p-2', titleAr: 'الفخار بالحجم الوسط (المبخر)', titleEn: 'Medium Pottery (Incense Burner)', category: 'pottery', price: 7, image: 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=600&q=80', stockQuantity: 10 },
+      { id: 'p-3', titleAr: 'الفخار بالحجم الكبير', titleEn: 'Large Pottery', category: 'pottery', price: 10, image: 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=600&q=80', stockQuantity: 8 },
+
+      // أدوات مكتبة
+      { id: 's-1', titleAr: 'ستكرات 🙂', titleEn: 'Stickers 🙂', category: 'stationery', price: 5, image: 'https://images.unsplash.com/photo-1572375833955-4d3345d3e098?auto=format&fit=crop&w=600&q=80', stockQuantity: 50 },
+      { id: 's-2', titleAr: 'ميدالية خرز حراري', titleEn: 'Hama Beads Keychain', category: 'stationery', price: 5, image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80', stockQuantity: 15 },
+      { id: 's-3', titleAr: 'ميدالية فوم', titleEn: 'Foam Keychain', category: 'stationery', price: 5, image: 'https://images.unsplash.com/photo-1533158307587-828f0a76ef46?auto=format&fit=crop&w=600&q=80', stockQuantity: 15 }
     ];
 
     const INITIAL_ORDERS = [
       {
         id: 'ord-1',
-        orderNumber: '#MEO-1042',
+        orderNumber: '#MEO-101',
         createdAt: 'اليوم',
         familyName: 'ميثاء (المالكة)',
-        notes: 'تجهيز طقم الهدية للمولود الجديد',
+        notes: 'طلب تجريبي',
         status: 'ready',
-        items: [{ titleAr: 'أفرول قطني مضلع للمواليد', titleEn: 'Baby Romper', price: 89, quantity: 1, size: '0-3 شهور' }],
-        total: 80,
-        lastStatusUpdate: 'جاهز للاستلام من دولاب العائلة'
-      },
-      {
-        id: 'ord-2',
-        orderNumber: '#MEO-1043',
-        createdAt: 'أمس',
-        familyName: 'أم خالد',
-        notes: 'الاستلام في جمعة العائلة القادمة',
-        status: 'preparing',
-        items: [{ titleAr: 'مجموعة المكعبات الخشبية', titleEn: 'Wooden Stacking', price: 115, quantity: 1 }],
-        total: 115,
-        lastStatusUpdate: 'قيد التجهيز والتغليف الفاخر'
+        items: [{ titleAr: 'أساور يد', titleEn: 'Bracelet', price: 5, quantity: 1 }],
+        total: 5,
+        lastStatusUpdate: 'جاهز'
       }
     ];
 
-    const INITIAL_COUPONS = [
-      { code: 'MEO10', discountPercent: 10, descAr: 'خصم عائلي 10%', descEn: '10% Family Discount' },
-      { code: 'FAMILY', discountPercent: 15, descAr: 'خصم المناسبات العائلية 15%', descEn: '15% Occasions Discount' },
-      { code: 'LOVE', discountPercent: 20, descAr: 'خصم المحبة للمقربين 20%', descEn: '20% Love Discount' }
-    ];
-
-    // ==========================================
-    // 2. التطبيق الرئيسي (Meo Store App)
-    // ==========================================
     function App() {
       const [language, setLanguage] = useState(() => localStorage.getItem('meo_lang') || 'ar');
       const isAr = language === 'ar';
 
-      // تحديث اتجاه ولغة الصفحة
       useEffect(() => {
         document.documentElement.dir = isAr ? 'rtl' : 'ltr';
         document.documentElement.lang = language;
         localStorage.setItem('meo_lang', language);
       }, [language]);
 
-      // المنتجات والطلبات والكوبونات
       const [products, setProducts] = useState(() => {
         try {
           const s = localStorage.getItem('meo_products');
@@ -195,14 +120,6 @@
         } catch { return INITIAL_ORDERS; }
       });
 
-      const [coupons, setCoupons] = useState(() => {
-        try {
-          const s = localStorage.getItem('meo_coupons');
-          return s ? JSON.parse(s) : INITIAL_COUPONS;
-        } catch { return INITIAL_COUPONS; }
-      });
-
-      // السلة والمفضلة
       const [cart, setCart] = useState(() => {
         try {
           const s = localStorage.getItem('meo_cart');
@@ -217,11 +134,9 @@
         } catch { return []; }
       });
 
-      const [appliedCoupon, setAppliedCoupon] = useState(() => localStorage.getItem('meo_coupon') || null);
       const [currentMember, setCurrentMember] = useState(() => localStorage.getItem('meo_member') || 'ميثاء');
       const [isOwnerLoggedIn, setIsOwnerLoggedIn] = useState(() => !!localStorage.getItem('meo_owner_session'));
 
-      // النوافذ المنبثقة
       const [isCartOpen, setIsCartOpen] = useState(false);
       const [isWishlistOpen, setIsWishlistOpen] = useState(false);
       const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
@@ -230,26 +145,20 @@
       const [isOwnerLoginOpen, setIsOwnerLoginOpen] = useState(false);
       const [selectedProduct, setSelectedProduct] = useState(null);
 
-      // إشعار منتصف الشاشة لمدة ثانية واحدة
       const [centerToast, setCenterToast] = useState(null);
-
       const triggerToast = (msgAr, msgEn, icon = '✨') => {
         setCenterToast({ msgAr, msgEn, icon });
-        setTimeout(() => setCenterToast(null), 1000); // ثانية واحدة بالضبط
+        setTimeout(() => setCenterToast(null), 1000);
       };
 
-      // حفظ التغييرات محلياً
       useEffect(() => { localStorage.setItem('meo_cart', JSON.stringify(cart)); }, [cart]);
       useEffect(() => { localStorage.setItem('meo_wishlist', JSON.stringify(wishlist)); }, [wishlist]);
       useEffect(() => { localStorage.setItem('meo_products', JSON.stringify(products)); }, [products]);
       useEffect(() => { localStorage.setItem('meo_orders', JSON.stringify(orders)); }, [orders]);
-      useEffect(() => { localStorage.setItem('meo_coupons', JSON.stringify(coupons)); }, [coupons]);
       useEffect(() => { localStorage.setItem('meo_member', currentMember); }, [currentMember]);
 
-      // التصفية والبحث
       const [selectedCat, setSelectedCat] = useState('all');
       const [searchQuery, setSearchQuery] = useState('');
-      const [priceSort, setPriceSort] = useState('default');
 
       const filteredProducts = useMemo(() => {
         let list = [...products];
@@ -258,22 +167,14 @@
           const q = searchQuery.toLowerCase().trim();
           list = list.filter(p => p.titleAr.toLowerCase().includes(q) || p.titleEn.toLowerCase().includes(q));
         }
-        if (priceSort === 'low') list.sort((a,b) => a.price - b.price);
-        if (priceSort === 'high') list.sort((a,b) => b.price - a.price);
         return list;
-      }, [products, selectedCat, searchQuery, priceSort]);
+      }, [products, selectedCat, searchQuery]);
 
-      // حسابات السلة
       const cartCount = cart.reduce((s, i) => s + i.quantity, 0);
-      const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
-      const activeCouponObj = coupons.find(c => c.code.toUpperCase() === appliedCoupon?.toUpperCase());
-      const discountPct = activeCouponObj ? activeCouponObj.discountPercent : 0;
-      const discountAmount = Math.round((subtotal * discountPct) / 100);
-      const totalAmount = Math.max(0, subtotal - discountAmount);
+      const totalAmount = cart.reduce((s, i) => s + i.price * i.quantity, 0);
 
-      // الإجراءات
-      const handleAddToCart = (product, quantity = 1, size = '', color = '') => {
-        const itemKey = `${product.id}-${size}-${color}`;
+      const handleAddToCart = (product, quantity = 1) => {
+        const itemKey = `${product.id}`;
         setCart(prev => {
           const exists = prev.find(i => i.itemKey === itemKey);
           if (exists) {
@@ -286,22 +187,20 @@
             titleEn: product.titleEn,
             price: product.price,
             image: product.image,
-            quantity,
-            size: size || product.sizes?.[0] || '',
-            color: color || product.colors?.[0] || ''
+            quantity
           }];
         });
-        triggerToast(`تمت إضافة "${product.titleAr}" للسلة`, `Added "${product.titleEn}" to cart`, '🛍️');
+        triggerToast(`تمت إضافة "${product.titleAr}" للسلة`, `Added to cart`, '🛍️');
       };
 
       const handleToggleWishlist = (product) => {
         const exists = wishlist.some(p => p.id === product.id);
         if (exists) {
           setWishlist(prev => prev.filter(p => p.id !== product.id));
-          triggerToast(`تمت إزالة "${product.titleAr}" من المفضلة`, `Removed from wishlist`, '🤍');
+          triggerToast(`تمت الإزالة من المفضلة`, `Removed`, '🤍');
         } else {
           setWishlist(prev => [...prev, product]);
-          triggerToast(`تمت إضافة "${product.titleAr}" إلى المفضلة ❤️`, `Added to wishlist ❤️`, '💖');
+          triggerToast(`تمت الإضافة للمفضلة ❤️`, `Added ❤️`, '💖');
         }
       };
 
@@ -313,62 +212,56 @@
           familyName: name.trim(),
           notes: notes.trim(),
           status: 'received',
-          items: cart.map(i => ({ titleAr: i.titleAr, titleEn: i.titleEn, price: i.price, quantity: i.quantity, size: i.size })),
+          items: cart.map(i => ({ titleAr: i.titleAr, titleEn: i.titleEn, price: i.price, quantity: i.quantity })),
           total: totalAmount,
-          lastStatusUpdate: isAr ? 'تم استلام طلبك وبانتظار التجهيز' : 'Order received, pending preparation'
+          lastStatusUpdate: isAr ? 'تم استلام طلبك وبانتظار التجهيز' : 'Order received'
         };
         setOrders(prev => [newOrd, ...prev]);
         setCart([]);
-        setAppliedCoupon(null);
         setCurrentMember(name.trim());
         setIsCheckoutOpen(false);
-        triggerToast(`تم إرسال طلبك بنجاح! رقم الطلب ${newOrd.orderNumber}`, `Order placed! ${newOrd.orderNumber}`, '🎉');
+        triggerToast(`تم إرسال الطلب! ${newOrd.orderNumber}`, `Order placed!`, '🎉');
         setTimeout(() => setIsOrdersOpen(true), 800);
       };
 
-      // تسجيل دخول المالكة
       const handleOwnerLogin = (email, pin) => {
         if (email.trim().toLowerCase() !== OWNER_EMAIL.toLowerCase()) {
-          alert(isAr ? 'البريد غير مصرح له. لوحة الإدارة للمالكة فقط' : 'Unauthorized email. Owner only.');
+          alert(isAr ? 'البريد غير صحيح' : 'Unauthorized');
           return;
         }
         if (pin.trim() !== '2026') {
-          alert(isAr ? 'رمز PIN غير صحيح (الافتراضي: 2026)' : 'Invalid PIN (Default: 2026)');
+          alert(isAr ? 'رمز PIN غير صحيح (الافتراضي: 2026)' : 'Invalid PIN');
           return;
         }
         setIsOwnerLoggedIn(true);
         localStorage.setItem('meo_owner_session', email);
         setIsOwnerLoginOpen(false);
         setIsAdminOpen(true);
-        triggerToast('مرحباً بكِ ميثاء! تم فتح لوحة تحكم المالكة', 'Welcome Meo! Owner Dashboard opened', '👑');
+        triggerToast('مرحباً بكِ ميثاء!', 'Welcome Meo!', '👑');
       };
 
       return (
         <div className="min-h-screen flex flex-col bg-[#fff9fa]">
-          {/* إشعار وسط الشاشة الأنيق لمدة ثانية واحدة */}
           {centerToast && (
             <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none p-4">
-              <div className="bg-white/95 backdrop-blur-md rounded-3xl p-5 border-2 border-slate-200 shadow-[0_20px_50px_rgba(255,182,193,0.35)] flex items-center gap-4 max-w-sm w-full animate-bounce">
+              <div className="bg-white/95 backdrop-blur-md rounded-3xl p-5 border-2 border-slate-200 shadow-xl flex items-center gap-4 max-w-sm w-full animate-bounce">
                 <span className="text-3xl">{centerToast.icon}</span>
                 <div className="text-start">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Meo Store · {isAr ? 'متجر العائلة' : 'Family Store'}</span>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Meo Store</span>
                   <p className="text-sm font-black text-slate-800 mt-0.5">{isAr ? centerToast.msgAr : centerToast.msgEn}</p>
                 </div>
               </div>
             </div>
           )}
 
-          {/* شريط الإعلان العلوي */}
           <div className="bg-gradient-to-r from-[#ffd1dc] via-[#ffb6c1] to-[#ffd1dc] text-[#d84365] text-xs py-1.5 px-4 text-center font-bold flex items-center justify-center gap-2 border-b border-[#ffe4e8]">
             <span>✨</span>
-            <span>{isAr ? 'متجر عائلي خاص ومميز · خامات قطن عضوي وألعاب تعليمية آمنة · كود الخصم MEO10' : 'Private Family Store · Organic Cotton & Montessori Toys · Coupon MEO10'}</span>
+            <span>{isAr ? 'متجر Meo Store · قائمة الأسعار والأعمال اليدوية الخاصة' : 'Meo Store Price List'}</span>
             <span>✨</span>
           </div>
 
-          {/* الهيدر الرئيسي */}
-          <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-2 border-slate-200/80 shadow-[0_4px_25px_rgba(255,182,193,0.18)]">
+          <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-2 border-slate-200/80 shadow-sm">
             <div className="max-w-6xl mx-auto px-4 py-3.5 flex flex-wrap items-center justify-between gap-3">
-              {/* الشعار */}
               <div className="flex items-center gap-3">
                 <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#ffd1dc] via-[#ffb6c1] to-[#ff8da1] border border-slate-200 flex items-center justify-center text-white font-black text-2xl shadow-xs">
                   M
@@ -377,27 +270,25 @@
                   <div className="flex items-center gap-2">
                     <h1 className="text-xl font-black text-[#2e2e2e]">Meo Store</h1>
                     <span className="text-[10px] font-bold text-[#d84365] bg-[#fff0f3] px-2 py-0.5 rounded-full border border-[#ffb6c1]">
-                      {isAr ? 'متجر العائلة' : 'Family Store'}
+                      {isAr ? 'قائمة الأسعار' : 'Prices'}
                     </span>
                   </div>
                   <p className="text-[11px] text-slate-400 font-medium">
-                    {isAr ? 'تصميم فخم وناعم خاص بالعائلة' : 'Luxurious, Soft & Private Family Boutique'}
+                    {isAr ? 'تصميم فخم وناعم' : 'Handmade Boutique'}
                   </p>
                 </div>
               </div>
 
-              {/* شريط البحث */}
               <div className="flex-1 max-w-xs mx-2">
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  placeholder={isAr ? 'ابحث في منتجات المتجر...' : 'Search items...'}
+                  placeholder={isAr ? 'ابحث في المنتجات...' : 'Search items...'}
                   className="w-full px-3.5 py-1.5 rounded-full bg-slate-50 border-2 border-slate-200 focus:border-[#ff8da1] focus:bg-white text-xs outline-none"
                 />
               </div>
 
-              {/* الأزرار العلوية */}
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setLanguage(isAr ? 'en' : 'ar')}
@@ -416,7 +307,6 @@
                 <button
                   onClick={() => setIsWishlistOpen(true)}
                   className="p-2 rounded-full bg-white border border-slate-200 text-slate-700 text-xs hover:border-[#ff8da1]"
-                  title="المفضلة"
                 >
                   💖 ({wishlist.length})
                 </button>
@@ -432,45 +322,24 @@
                   onClick={() => isOwnerLoggedIn ? setIsAdminOpen(true) : setIsOwnerLoginOpen(true)}
                   className={`px-3 py-1.5 rounded-full text-xs font-bold ${isOwnerLoggedIn ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-700 border border-slate-200'}`}
                 >
-                  🔒 {isAr ? 'لوحة المالكة' : 'Owner'}
+                  🔒 {isAr ? 'المالكة' : 'Owner'}
                 </button>
               </div>
             </div>
           </header>
 
-          {/* بانر الهيرو الفخم */}
-          <section className="bg-gradient-to-b from-[#fff5f7] via-[#fff9fa] to-white border-b border-slate-200/80 py-10 px-4">
-            <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
-              <div className="max-w-xl text-start space-y-4">
-                <span className="inline-block bg-white border border-slate-200 rounded-full px-3 py-1 text-xs font-bold text-[#d84365]">
-                  ✨ {isAr ? 'تشكيلة المواليد والعائلة الفاخرة' : 'Bespoke Newborn & Family Collection'}
-                </span>
-                <h2 className="text-3xl md:text-5xl font-black text-slate-800 leading-snug">
-                  {isAr ? 'عالم ناعم يجمع العائلة ويهتم بأدق تفاصيل طفلك' : 'Gentle Luxury for the Family & Cherished Baby Moments'}
-                </h2>
-                <p className="text-xs md:text-sm text-slate-600 leading-relaxed">
-                  {isAr ? 'متجرنا العائلي الخاص يجمع بين خامات القطن العضوي فائق النعومة، الألعاب التعليمية، ومستلزمات الأمومة الراقية بكل حب وسهولة بدون بوابات دفع أو بيانات توصيل خارجية.' : 'Curated organic infant apparel, Montessori toys, and postpartum maternity sets crafted with love.'}
-                </p>
-                <div className="flex gap-3 pt-2">
-                  <a href="#products-section" className="bg-[#d84365] hover:bg-[#c23354] text-white font-bold px-6 py-2.5 rounded-full text-xs shadow-md transition-all">
-                    {isAr ? 'تصفح التشكيلات الآن' : 'Explore Collection'}
-                  </a>
-                </div>
-              </div>
-
-              <div className="w-full max-w-sm rounded-3xl overflow-hidden border-4 border-white shadow-xl aspect-square bg-[#fff0f3]">
-                <img
-                  src="https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?auto=format&fit=crop&w=700&q=80"
-                  alt="Meo Store"
-                  className="w-full h-full object-cover"
-                />
-              </div>
+          <section className="bg-gradient-to-b from-[#fff5f7] via-[#fff9fa] to-white border-b border-slate-200/85 py-10 px-4">
+            <div className="max-w-6xl mx-auto text-center space-y-3">
+              <span className="inline-block bg-white border border-slate-200 rounded-full px-4 py-1 text-xs font-bold text-[#d84365]">
+                ✨ {isAr ? 'قائمة الأسعار الحصرية' : 'Exclusive Price List'}
+              </span>
+              <h2 className="text-3xl md:text-4xl font-black text-slate-800">
+                {isAr ? 'جميع أعمالك اليدوية في مكان واحد' : 'Handmade Collections'}
+              </h2>
             </div>
           </section>
 
-          {/* محتوى المتجر */}
-          <main id="products-section" className="flex-1 max-w-6xl mx-auto px-4 py-8 w-full">
-            {/* تصنيفات المتجر */}
+          <main className="flex-1 max-w-6xl mx-auto px-4 py-8 w-full">
             <div className="flex gap-2 overflow-x-auto pb-4 mb-6">
               {STORE_CATEGORIES.map(cat => (
                 <button
@@ -484,7 +353,6 @@
               ))}
             </div>
 
-            {/* شبكة المنتجات */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
               {filteredProducts.map(p => (
                 <div
@@ -503,9 +371,8 @@
                   </div>
 
                   <div className="text-start space-y-1 mb-3">
-                    <span className="text-[10px] text-slate-400 block">{isAr ? `المخزون: ${p.stockQuantity}` : `Stock: ${p.stockQuantity}`}</span>
                     <h3 className="font-extrabold text-xs text-slate-800 line-clamp-2 leading-snug">{isAr ? p.titleAr : p.titleEn}</h3>
-                    <p className="font-black text-sm text-[#d84365]">{p.price} ر.س</p>
+                    <p className="font-black text-sm text-[#d84365]">{p.price} $</p>
                   </div>
 
                   <button
@@ -519,68 +386,41 @@
             </div>
           </main>
 
-          {/* نافذة تفاصيل المنتج */}
-          {selectedProduct && (
-            <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4" onClick={() => setSelectedProduct(null)}>
-              <div className="bg-white rounded-3xl max-w-lg w-full p-6 space-y-4 text-start border-2 border-slate-200 shadow-2xl" onClick={e => e.stopPropagation()}>
-                <div className="flex justify-between items-start">
-                  <h3 className="font-black text-base text-slate-800">{isAr ? selectedProduct.titleAr : selectedProduct.titleEn}</h3>
-                  <button onClick={() => setSelectedProduct(null)} className="text-slate-400 font-bold text-lg">✕</button>
-                </div>
-                <div className="aspect-video rounded-2xl overflow-hidden bg-slate-50">
-                  <img src={selectedProduct.image} alt="Product" className="w-full h-full object-cover" />
-                </div>
-                <p className="text-xs text-slate-600 leading-relaxed">{isAr ? selectedProduct.descriptionAr : selectedProduct.descriptionEn}</p>
-                <div className="flex justify-between items-center pt-2 border-t border-slate-100">
-                  <span className="text-xl font-black text-[#d84365]">{selectedProduct.price} ر.س</span>
-                  <button
-                    onClick={() => { handleAddToCart(selectedProduct); setSelectedProduct(null); }}
-                    className="bg-[#d84365] hover:bg-[#c23354] text-white px-6 py-2.5 rounded-2xl font-bold text-xs shadow-md"
-                  >
-                    🛍️ {isAr ? 'إضافة إلى السلة' : 'Add to Cart'}
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
           {/* درج السلة */}
           {isCartOpen && (
             <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex justify-end" onClick={() => setIsCartOpen(false)}>
               <div className="bg-white w-full max-w-md h-full p-5 flex flex-col justify-between shadow-2xl" onClick={e => e.stopPropagation()}>
                 <div className="flex justify-between items-center border-b pb-3">
-                  <h3 className="font-black text-base text-slate-800">🛍️ {isAr ? 'سلة المشتريات العائلية' : 'Family Cart'}</h3>
+                  <h3 className="font-black text-base text-slate-800">🛍️ {isAr ? 'السلة' : 'Cart'}</h3>
                   <button onClick={() => setIsCartOpen(false)} className="text-slate-400 font-bold text-lg">✕</button>
                 </div>
-
                 <div className="flex-1 overflow-y-auto py-4 space-y-3">
                   {cart.length === 0 ? (
-                    <p className="text-center text-xs text-slate-400 mt-10">{isAr ? 'السلة فارغة حالياً' : 'Cart is empty'}</p>
+                    <p className="text-center text-xs text-slate-400 mt-10">{isAr ? 'السلة فارغة' : 'Cart is empty'}</p>
                   ) : (
                     cart.map(item => (
                       <div key={item.itemKey} className="flex items-center gap-3 p-3 bg-slate-50 rounded-2xl border border-slate-200">
                         <img src={item.image} className="w-12 h-12 rounded-xl object-cover" />
                         <div className="flex-1 text-start">
                           <h4 className="font-bold text-xs text-slate-800 line-clamp-1">{isAr ? item.titleAr : item.titleEn}</h4>
-                          <span className="text-xs font-black text-[#d84365]">{item.price * item.quantity} ر.س</span>
+                          <span className="text-xs font-black text-[#d84365]">{item.price * item.quantity} $</span>
                         </div>
                         <button onClick={() => setCart(cart.filter(i => i.itemKey !== item.itemKey))} className="text-slate-400 hover:text-red-500 text-xs">🗑️</button>
                       </div>
                     ))
                   )}
                 </div>
-
                 {cart.length > 0 && (
                   <div className="space-y-3 pt-3 border-t">
                     <div className="flex justify-between font-black text-sm">
-                      <span>{isAr ? 'المجموع النهائي:' : 'Total Amount:'}</span>
-                      <span className="text-[#d84365]">{totalAmount} ر.س</span>
+                      <span>{isAr ? 'المجموع:' : 'Total:'}</span>
+                      <span className="text-[#d84365]">{totalAmount} $</span>
                     </div>
                     <button
                       onClick={() => { setIsCartOpen(false); setIsCheckoutOpen(true); }}
                       className="w-full py-3 bg-[#d84365] hover:bg-[#c23354] text-white font-black rounded-2xl text-xs shadow-md"
                     >
-                      {isAr ? 'متابعة وتأكيد طلب العائلة' : 'Proceed to Family Request'}
+                      {isAr ? 'تأكيد الطلب' : 'Checkout'}
                     </button>
                   </div>
                 )}
@@ -588,58 +428,42 @@
             </div>
           )}
 
-          {/* نافذة تأكيد الطلب العائلي (بدون دفع إلكتروني وبدون عنوان/هاتف) */}
+          {/* نافذة تأكيد الطلب */}
           {isCheckoutOpen && (
             <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
               <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 text-start border-2 border-slate-200 shadow-2xl">
                 <div className="flex justify-between items-center border-b pb-2">
-                  <h3 className="font-black text-base text-slate-800">{isAr ? 'تأكيد طلب العائلة' : 'Confirm Family Request'}</h3>
+                  <h3 className="font-black text-base text-slate-800">{isAr ? 'تأكيد الطلب' : 'Confirm Order'}</h3>
                   <button onClick={() => setIsCheckoutOpen(false)} className="text-slate-400 font-bold text-lg">✕</button>
                 </div>
-                <p className="text-xs text-slate-500">{isAr ? 'طلب داخلي خاص بأفراد العائلة بدون تعقيدات شحن أو دفع إلكتروني.' : 'Private internal family order with no payment gateway or shipping hassle.'}</p>
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">{isAr ? 'اسمك أو اسم العائلة *' : 'Your Name / Family Member *'}</label>
+                  <label className="text-xs font-bold text-slate-700 block mb-1">{isAr ? 'الاسم أو رمز العميل *' : 'Name *'}</label>
                   <input
                     id="orderNameInput"
                     defaultValue={currentMember}
                     className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#ff8da1]"
-                    placeholder="مثال: ميثاء، أم خالد، نورة..."
                   />
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">{isAr ? 'ملاحظة خاصة للمالكة (اختياري)' : 'Special Note (Optional)'}</label>
-                  <textarea
-                    id="orderNotesInput"
-                    rows="2"
-                    className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#ff8da1]"
-                    placeholder="مثال: تجهيز كهدية للمولود، الاستلام في الجمعة..."
-                  ></textarea>
-                </div>
-                <div className="bg-[#fff9fa] p-3 rounded-xl border text-xs flex justify-between font-bold">
-                  <span>{isAr ? 'الإجمالي المطلوب:' : 'Total Amount:'}</span>
-                  <span className="text-[#d84365] font-black">{totalAmount} ر.س</span>
                 </div>
                 <button
                   onClick={() => {
                     const name = document.getElementById('orderNameInput').value;
-                    const notes = document.getElementById('orderNotesInput').value;
-                    if (!name.trim()) return alert(isAr ? 'يرجى كتابة الاسم' : 'Please enter your name');
-                    handleConfirmOrder(name, notes);
+                    if (!name.trim()) return alert(isAr ? 'يرجى كتابة الاسم' : 'Enter name');
+                    handleConfirmOrder(name, '');
                   }}
                   className="w-full py-3 bg-[#d84365] hover:bg-[#c23354] text-white font-black rounded-2xl text-xs shadow-md"
                 >
-                  ✓ {isAr ? `إرسال الطلب للعائلة (${totalAmount} ر.س)` : `Submit Family Order (${totalAmount} SAR)`}
+                  ✓ {isAr ? `إرسال الطلب (${totalAmount} $)` : `Submit (${totalAmount} $)`}
                 </button>
               </div>
             </div>
           )}
 
-          {/* نافذة تتبع طلبات العائلة ومراحلها الأربعة */}
+          {/* نافذة الطلبات */}
           {isOrdersOpen && (
             <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
               <div className="bg-white rounded-3xl max-w-xl w-full p-6 space-y-4 max-h-[85vh] flex flex-col border-2 border-slate-200 shadow-2xl">
                 <div className="flex justify-between items-center border-b pb-2">
-                  <h3 className="font-black text-base text-slate-800">📦 {isAr ? 'متابعة طلبات العائلة' : 'Family Orders Tracking'}</h3>
+                  <h3 className="font-black text-base text-slate-800">📦 {isAr ? 'طلباتي' : 'Orders'}</h3>
                   <button onClick={() => setIsOrdersOpen(false)} className="text-slate-400 font-bold text-lg">✕</button>
                 </div>
                 <div className="flex-1 overflow-y-auto space-y-4">
@@ -649,29 +473,8 @@
                         <span className="font-bold text-xs text-[#d84365] bg-white px-2 py-0.5 rounded-lg border">{ord.orderNumber}</span>
                         <span className="text-xs font-bold text-slate-700">{ord.familyName}</span>
                       </div>
-                      {/* مراحل الطلب الأربعة */}
-                      <div className="grid grid-cols-4 gap-1 text-center py-1">
-                        {['received', 'preparing', 'ready', 'delivered'].map((stKey, i) => {
-                          const labels = {
-                            received: isAr ? 'تم الاستلام' : 'Received',
-                            preparing: isAr ? 'قيد التجهيز' : 'Preparing',
-                            ready: isAr ? 'جاهز للاستلام' : 'Ready',
-                            delivered: isAr ? 'تم التسليم' : 'Delivered'
-                          };
-                          const stepOrder = { received: 1, preparing: 2, ready: 3, delivered: 4 };
-                          const isDone = stepOrder[ord.status] >= (i + 1);
-                          return (
-                            <div key={stKey} className="flex flex-col items-center">
-                              <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${isDone ? 'bg-[#d84365] text-white' : 'bg-slate-200 text-slate-400'}`}>
-                                {isDone ? '✓' : i + 1}
-                              </span>
-                              <span className={`text-[10px] font-bold mt-1 ${isDone ? 'text-slate-800' : 'text-slate-400'}`}>{labels[stKey]}</span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                      <div className="text-[11px] text-emerald-700 bg-emerald-50 p-2 rounded-xl border border-emerald-200">
-                        <strong>{isAr ? 'آخر تحديث من المالكة:' : 'Owner Update:'}</strong> {ord.lastStatusUpdate}
+                      <div className="text-[11px] text-emerald-700 bg-emerald-50 p-2 rounded-xl border">
+                        <strong>{isAr ? 'الحالة:' : 'Status:'}</strong> {ord.lastStatusUpdate}
                       </div>
                     </div>
                   ))}
@@ -680,97 +483,52 @@
             </div>
           )}
 
-          {/* نافذة تسجيل دخول المالكة */}
+          {/* دخول المالكة */}
           {isOwnerLoginOpen && (
             <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
               <div className="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 text-start border-2 border-slate-200 shadow-2xl">
                 <div className="flex justify-between items-center border-b pb-2">
-                  <h3 className="font-black text-base text-slate-800">🔒 {isAr ? 'دخول مالكة المتجر' : 'Owner Login'}</h3>
+                  <h3 className="font-black text-base text-slate-800">🔒 {isAr ? 'دخول المالكة' : 'Owner Login'}</h3>
                   <button onClick={() => setIsOwnerLoginOpen(false)} className="text-slate-400 font-bold text-lg">✕</button>
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">{isAr ? 'بريد المالكة' : 'Owner Email'}</label>
-                  <input id="ownerEmailInput" defaultValue={OWNER_EMAIL} className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-mono" />
+                  <label className="text-xs font-bold text-slate-700 block mb-1">البريد</label>
+                  <input id="ownerEmailInput" defaultValue={OWNER_EMAIL} className="w-full px-3 py-2 rounded-xl border text-xs font-mono" />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">{isAr ? 'رمز PIN (الافتراضي: 2026)' : 'PIN (Default: 2026)'}</label>
-                  <input id="ownerPinInput" type="password" placeholder="2026" className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-mono tracking-widest" />
+                  <label className="text-xs font-bold text-slate-700 block mb-1">PIN (2026)</label>
+                  <input id="ownerPinInput" type="password" placeholder="2026" className="w-full px-3 py-2 rounded-xl border text-xs font-mono tracking-widest" />
                 </div>
                 <button
-                  onClick={() => {
-                    const em = document.getElementById('ownerEmailInput').value;
-                    const pin = document.getElementById('ownerPinInput').value;
-                    handleOwnerLogin(em, pin);
-                  }}
-                  className="w-full py-2.5 bg-[#d84365] hover:bg-[#c23354] text-white font-bold rounded-xl text-xs shadow-md"
+                  onClick={() => handleOwnerLogin(document.getElementById('ownerEmailInput').value, document.getElementById('ownerPinInput').value)}
+                  className="w-full py-2.5 bg-[#d84365] text-white font-bold rounded-xl text-xs shadow-md"
                 >
-                  {isAr ? 'تسجيل الدخول' : 'Sign In'}
+                  تسجيل الدخول
                 </button>
               </div>
             </div>
           )}
 
-          {/* لوحة تحكم المالكة المحمية */}
-          {isAdminOpen && (
-            <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-              <div className="bg-white rounded-3xl max-w-3xl w-full p-6 space-y-4 max-h-[90vh] flex flex-col border-2 border-slate-200 shadow-2xl text-start">
-                <div className="flex justify-between items-center border-b pb-3">
-                  <div>
-                    <h3 className="font-black text-lg text-slate-800">👑 {isAr ? 'لوحة تحكم المالكة (ميثاء)' : 'Store Owner Dashboard'}</h3>
-                    <p className="text-xs text-slate-500">{OWNER_EMAIL}</p>
-                  </div>
-                  <button onClick={() => setIsAdminOpen(false)} className="text-slate-400 font-bold text-lg">✕</button>
-                </div>
-
-                <div className="flex-1 overflow-y-auto space-y-4">
-                  <h4 className="font-extrabold text-sm text-slate-800 border-b pb-1">{isAr ? 'الطلبات العائلية وتحديث الحالات فوراً:' : 'Manage Family Orders:'}</h4>
-                  {orders.map(ord => (
-                    <div key={ord.id} className="p-3 bg-slate-50 rounded-2xl border flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                      <div>
-                        <span className="font-bold text-xs text-[#d84365]">{ord.orderNumber} - {ord.familyName}</span>
-                        <p className="text-[11px] text-slate-500">{isAr ? 'الحالة الحالية:' : 'Status:'} <strong>{ord.status}</strong></p>
-                      </div>
-                      <div className="flex gap-1 flex-wrap">
-                        {['received', 'preparing', 'ready', 'delivered'].map(st => (
-                          <button
-                            key={st}
-                            onClick={() => {
-                              setOrders(orders.map(o => o.id === ord.id ? { ...o, status: st, lastStatusUpdate: `تم التحديث إلى: ${st}` } : o));
-                              triggerToast(`تم تحديث حالة الطلب إلى: ${st}`, `Order status updated to: ${st}`);
-                            }}
-                            className={`px-2 py-1 rounded-lg text-[10px] font-bold border ${ord.status === st ? 'bg-[#d84365] text-white' : 'bg-white text-slate-600'}`}
-                          >
-                            {st}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* نافذة المفضلة */}
+          {/* المفضلة */}
           {isWishlistOpen && (
             <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex justify-end" onClick={() => setIsWishlistOpen(false)}>
               <div className="bg-white w-full max-w-md h-full p-5 flex flex-col justify-between shadow-2xl" onClick={e => e.stopPropagation()}>
                 <div className="flex justify-between items-center border-b pb-3">
-                  <h3 className="font-black text-base text-slate-800">💖 {isAr ? 'المفضلة الخاصة' : 'Wishlist'}</h3>
+                  <h3 className="font-black text-base text-slate-800">💖 المفضلة</h3>
                   <button onClick={() => setIsWishlistOpen(false)} className="text-slate-400 font-bold text-lg">✕</button>
                 </div>
                 <div className="flex-1 overflow-y-auto py-4 space-y-3">
                   {wishlist.length === 0 ? (
-                    <p className="text-center text-xs text-slate-400 mt-10">{isAr ? 'لا توجد منتجات محفوظة' : 'No favorites yet'}</p>
+                    <p className="text-center text-xs text-slate-400 mt-10">لا توجد منتجات بالمفضلة</p>
                   ) : (
                     wishlist.map(p => (
                       <div key={p.id} className="flex items-center gap-3 p-3 bg-slate-50 rounded-2xl border">
                         <img src={p.image} className="w-12 h-12 rounded-xl object-cover" />
                         <div className="flex-1 text-start">
-                          <h4 className="font-bold text-xs text-slate-800 line-clamp-1">{isAr ? p.titleAr : p.titleEn}</h4>
-                          <span className="text-xs font-black text-[#d84365]">{p.price} ر.س</span>
+                          <h4 className="font-bold text-xs text-slate-800">{isAr ? p.titleAr : p.titleEn}</h4>
+                          <span className="text-xs font-black text-[#d84365]">{p.price} $</span>
                         </div>
-                        <button onClick={() => { handleAddToCart(p); }} className="text-xs bg-[#ffd1dc] px-2 py-1 rounded-lg font-bold">🛍️</button>
+                        <button onClick={() => handleAddToCart(p)} className="text-xs bg-[#ffd1dc] px-2 py-1 rounded-lg font-bold">🛍️</button>
                       </div>
                     ))
                   )}
@@ -779,9 +537,8 @@
             </div>
           )}
 
-          {/* الفوتر */}
           <footer className="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-400">
-            <p>© {new Date().getFullYear()} Meo Store · {isAr ? 'متجر العائلة الخاص · صنع بكل حب' : 'Private Family Boutique · Built with love'}</p>
+            <p>© Meo Store · صُنع بكل عناية</p>
           </footer>
         </div>
       );
