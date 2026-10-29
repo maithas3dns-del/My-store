@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meo Store | متجر ميّو</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pink-bg: #fff0f5;
+            --pink-card: #ffffff;
+            --primary-pink: #ffb6c1;
+            --accent-pink: #ff69b4;
+            --dark-pink: #d81b60;
+            --text-color: #5a4b51;
+            --border-radius: 20px;
+            --shadow: 0 8px 25px rgba(255, 105, 180, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background-color: var(--pink-bg);
+            background-image: radial-gradient(#ffb6c1 0.75px, transparent 0.75px);
+            background-size: 16px 16px;
+            color: var(--text-color);
+            padding-bottom: 90px;
+        }
+
+        /* Header & Banner */
+        header {
+            background: linear-gradient(135deg, #ffe4e1, #fff0f5);
+            text-align: center;
+            padding: 30px 20px 20px;
+            border-bottom-left-radius: 35px;
+            border-bottom-right-radius: 35px;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .bow-icon {
+            font-size: 45px;
+            display: block;
+            margin-bottom: 5px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .store-title {
+            font-family: 'Fredoka', cursive, 'Tajawal';
+            color: var(--dark-pink);
+            font-size: 32px;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .store-subtitle {
+            color: #8b6b7a;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        /* Category Filter Tabs */
+        .categories {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            padding: 15px 20px;
+            scrollbar-width: none;
+        }
+
+        .categories::-webkit-scrollbar {
+            display: none;
+        }
+
+        .cat-btn {
+            background: white;
+            border: 2px solid var(--primary-pink);
+            color: var(--dark-pink);
+            padding: 8px 18px;
+            border-radius: 25px;
+            font-weight: 700;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .cat-btn.active, .cat-btn:hover {
+            background: var(--accent-pink);
+            color: white;
+            border-color: var(--accent-pink);
+        }
+
+        /* Container */
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        .section-title {
+            color: var(--dark-pink);
+            font-size: 20px;
+            margin: 20px 5px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Product Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+        }
+
+        .card {
+            background: var(--pink-card);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 182, 193, 0.4);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+        }
+
+        .card-emoji {
+            font-size: 35px;
+            margin-bottom: 8px;
+        }
+
+        .card-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: #4a3b42;
+            margin-bottom: 5px;
+        }
+
+        .card-price {
+            color: var(--accent-pink);
+            font-weight: 800;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .add-btn {
+            background: var(--primary-pink);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+        }
+
+        .add-btn:hover {
+            background: var(--accent-pink);
+        }
+
+        /* Floating Cart Footer Bar */
+        .cart-bar {
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 30px);
+            max-width: 600px;
+            background: white;
+            border-radius: 30px;
+            padding: 12px 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 2px solid var(--primary-pink);
+            z-index: 100;
+        }
+
+        .cart-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-count {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .cart-total {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--dark-pink);
+        }
+
+        .view-cart-btn {
+            background: linear-gradient(45deg, var(--accent-pink), var(--dark-pink));
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 25px;
+            width: 90%;
+            max-width: 450px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--pink-bg);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #888;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #eee;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <span class="bow-icon">🎀</span>
+        <h1 class="store-title">MEO STORE</h1>
+        <p class="store-subtitle">منتجات فخمة وصناعة يدوية بكل حب 💕</p>
+    </header>
+
+    <div class="container">
+        
+        <!-- الخرز -->
+        <div class="section-title">✨ قائمة الخرز</div>
+        <div class="grid">
+            <div class="card">
+                <div class="card-emoji">🦪</div>
+                <div class="card-name">أقراط أذن</div>
+                <div class="card-price">$5</div>
+                <button class="add-btn" onclick="addToCart('أقراط أذن', 5)">إضافة للسلة 🛍️</button>
+            </div>
+            <div class="card">
+                <div class="card-emoji">💍</div>
+                <div class="card-name">خاتم خرز</div>
+                <div class="card-price">$5</div>
+                <button class="add-btn" onclick="addToCart('خاتم خرز', 5)">إضافة للسلة 🛍️</button>
+            </div>
+            <div class="card">
+                <div class="card-emoji">📿</div>
+                <div class="card-name">أساور يد</div>
+                <div class="card-price">$5</div>
+                <button class="add-btn" onclick="addToCart('أساور يد', 5)">إضافة للسلة 🛍️</button>
+            </div>
+            <div class="card">
+                <div class="card-emoji">🖐️</div>
+                <div class="card-name">أساور متصلة بالأصبع</div>
+                <div class="card-price">$6</div>
+                <button class="add-btn" onclick="addToCart('أساور متصلة بالأصبع', 6)">إضافة للسلة 🛍️</button>
+            </div>
+            <div class="card">
+                <div class="card-emoji">✨</div>
+                <div class="card-name">سلسلة</div>
+                <div class="card-price">$10</div>
+                <button class="add-btn" onclick="addToCart('سلسلة', 10)">إضافة للسلة 🛍️</button>
+            </div>
+            <div class="card">
+                <div class="card-emoji">👑</div>
+                <div class="card-name">أطقم متكاملة</div>
+                <div class="card-price">$15</div>
+                <button class="add-btn" onclick="addToCart('أطقم', 15)">إضافة للسلة 🛍️</button>
+            </div>
+            <div class="card">
+                <div class="card-emoji">📱</div>
+                <div class="card-name">أساور للأجهزة</div>
+                <div class="card-price">$5</div>
+                <button class="add-btn" onclick="addToCart('أساور للأجهزة', 5)">إضافة للسلة 🛍️</button>
+            </div>
+        </div>
+
+        <!-- صلصال فوم -->
+        <div class="section-title">🎨 صلصال فوم</div>
+        <div class="grid">
+            <div class="card">
+                <div class="card-emoji">🌈</div>
+                <div class="card-name">صلصال الفوم</div>
+                <div class="card-price">حسب الكمية 💰</div>
+                <button class="add-btn" onclick="addToCart('صلصال الفوم', 5)">طلب تحديد السعر 💬</button>
+            </div>
+        </div>
+
+        <!-- الفخارات -->
+        <div class="section-title">🏺 قسم الفخارات</div>
+        <div class="grid">
+            <div class="card">
+                <div class="card-emoji">🪴</div>
+                <div class="card-name">فخار بالحجم الصغير</div>
+                <div class="card-price">$5</div>
+                <button class="add-btn" onclick="addToCart('فخار صغير', 5)">إضافة للسلة 🛍️</button>
+            </div>
+            <div class="card">
+                <div class="card-emoji">🕯️</div>
+                <div class="card-name">فخار الوسط (المبخر)</div>
+                <div class="card-price">$7</div>
+                <button class="add-btn" onclick="addToCart('فخار وسط (مبخر)', 7)">إضافة للسلة 🛍️</button>
+            </div>
+            <div class="card">
+                <div class="card-emoji">🏺</div>
+                <div class="card-name">فخار بالحجم الكبير</div>
+                <div class="card-price">$10</div>
+                <button class="add-btn" onclick="addToCart('فخار كبير', 10)">إضافة للسلة 🛍️</button>
+            </div>
+        </div>
+
+        <!-- أدوات مكتبية وميداليات -->
+        <div class="section-title">✏️ أدوات مكتبية وميداليات</div>
+        <div class="grid">
+            <div class="card">
+                <div class="card-emoji">😊</div>
+                <div class="card-name">ستكرات كيوت</div>
+                <div class="card-price">$5</div>
+                <button class="add-btn" onclick="addToCart('ستكرات', 5)">إضافة للسلة 🛍️</button>
+            </div>
+            <div class="card">
+                <div class="card-emoji">🔑</div>
+                <div class="card-name">ميدالية خرز حراري</div>
+                <div class="card-price">$5</div>
+                <button class="add-btn" onclick="addToCart('ميدالية خرز حراري', 5)">إضافة للسلة 🛍️</button>
+            </div>
+            <div class="card">
+                <div class="card-emoji">🧸</div>
+                <div class="card-name">ميدالية فوم</div>
+                <div class="card-price">$5</div>
+                <button class="add-btn" onclick="addToCart('ميدالية فوم', 5)">إضافة للسلة 🛍️</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- الشريط السفلي للسلة -->
+    <div class="cart-bar">
+        <div class="cart-info">
+            <span class="cart-count" id="cart-count">0 منتجات مختارة</span>
+            <span class="cart-total" id="cart-total">المجموع: $0</span>
+        </div>
+        <button class="view-cart-btn" onclick="toggleModal()">عرض الطلب 🛒</button>
+    </div>
+
+    <!-- نافذة تفاصيل السلة -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🎀 ملخص الطلب</h3>
+                <button class="close-btn" onclick="toggleModal()">✖</button>
+            </div>
+            <div id="cart-items-list">
+                <p style="text-align: center; color: #888;">السلة فارغة حالياً 💕</p>
+            </div>
+            <div style="margin-top: 20px; text-align: center;">
+                <h4 id="modal-total" style="color: var(--dark-pink); margin-bottom: 10px;">المجموع: $0</h4>
+                <button class="add-btn" style="background: var(--dark-pink);" onclick="alert('تم تأكيد طلبك بنجاح! 💕')">تأكيد الطلب ✨</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let cart = [];
+
+        function addToCart(name, price) {
+            cart.push({name, price});
+            updateCart();
+        }
+
+        function updateCart() {
+            document.getElementById('cart-count').innerText = `${cart.length} منتجات مختارة`;
+            let total = cart.reduce((sum, item) => sum + item.price, 0);
+            document.getElementById('cart-total').innerText = `المجموع: $${total}`;
+            document.getElementById('modal-total').innerText = `المجموع النهائي: $${total}`;
+
+            let listHtml = '';
+            if(cart.length === 0) {
+                listHtml = '<p style="text-align: center; color: #888;">السلة فارغة حالياً 💕</p>';
+            } else {
+                cart.forEach((item, index) => {
+                    listHtml += `
+                        <div class="cart-item">
+                            <span>${item.name}</span>
+                            <b>$${item.price}</b>
+                        </div>
+                    `;
+                });
+            }
+            document.getElementById('cart-items-list').innerHTML = listHtml;
+        }
+
+        function toggleModal() {
+            let modal = document.getElementById('cartModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+    </script>
+</body>
+</html>
